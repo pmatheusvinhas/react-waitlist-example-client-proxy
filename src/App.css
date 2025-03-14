@@ -1,15 +1,16 @@
 .app-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.5rem;
   text-align: center;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  box-sizing: border-box;
 }
 
 header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 h1 {
@@ -21,20 +22,170 @@ h1 {
 h2 {
   font-size: 1.5rem;
   color: #646cff;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .main-content {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+  }
 }
 
 .form-container {
+  flex: 1;
+  width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.25rem;
   border-radius: 8px;
   background-color: #f9f9f9;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Wrapper para os logs */
+.logs-wrapper {
+  flex: 1;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Impede que o conteúdo escape */
+  box-sizing: border-box;
+}
+
+/* Reduzir espaço entre campos do formulário */
+.form-container :global(.fieldContainer) {
+  margin-bottom: 0.5rem !important;
+}
+
+/* Reduzir espaço entre campos do formulário */
+.form-container form > div {
+  margin-bottom: 0.5rem !important;
+}
+
+.event-log-container {
+  width: 100%;
+  padding: 1rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden; /* Impede que o conteúdo escape */
+  box-sizing: border-box; /* Inclui padding e border no cálculo da largura */
+}
+
+@media (min-width: 1024px) {
+  .form-container,
+  .logs-wrapper {
+    width: 48%;
+    max-width: none;
+    min-height: 600px;
+  }
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+.event-log, .api-log {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  background-color: #fff;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  color: #333;
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box; /* Inclui padding e border no cálculo da largura */
+  padding: 0; /* Remove padding padrão */
+}
+
+.api-log {
+  margin-bottom: 0;
+}
+
+.event-item, .api-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+  word-break: break-word; /* Quebra palavras longas */
+  overflow-wrap: break-word; /* Garante que palavras longas sejam quebradas */
+}
+
+.event-item:last-child, .api-item:last-child {
+  border-bottom: none;
+}
+
+.event-header, .api-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.event-type, .api-type {
+  font-weight: bold;
+  color: #646cff;
+}
+
+.api-error {
+  color: #dc3545;
+}
+
+.event-security, .api-security {
+  color: #198754;
+}
+
+.event-time, .api-time {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.event-data, .api-data {
+  margin: 0;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  background-color: #f5f5f5;
+  padding: 0.5rem;
+  border-radius: 4px;
+  color: #333;
+  max-width: 100%; /* Limita a largura máxima */
+  box-sizing: border-box; /* Inclui padding e border no cálculo da largura */
+  text-align: left;
+  font-family: monospace;
+}
+
+.no-events {
+  padding: 0.75rem;
+  color: #666;
+  font-style: italic;
+  text-align: center;
 }
 
 footer {
-  margin-top: 3rem;
+  margin-top: 2rem;
   font-size: 0.9rem;
   color: #888;
 }
@@ -48,45 +199,66 @@ footer a:hover {
   color: #535bf2;
 }
 
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Add styles for the CORS warning banner */
+.cors-warning-banner {
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+  border-left: 4px solid #0dcaf0;
+  color: #0c5460;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  clear: both;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+}
+
+.cors-warning-banner h3 {
+  margin-top: 0;
+  color: #0c5460;
+  font-size: 1.2rem;
+  border-bottom-color: #bee5eb;
+  text-align: left;
+}
+
+.cors-warning-banner p {
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+.cors-warning-banner .example-link {
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem;
+  border-radius: 4px;
   text-align: center;
+  margin: 0.75rem 0;
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.cors-warning-banner a {
+  color: #0056b3;
+  text-decoration: underline;
+  font-weight: bold;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Improve error styling in event log */
+.event-error, .api-error {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+  border-color: #f5c6cb !important;
+}
+
+/* Ajuste para garantir que os logs tenham margens iguais */
+@media (min-width: 1024px) {
+  .event-log-container {
+    padding: 1rem;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .event-log, .api-log {
+    margin-left: auto;
+    margin-right: auto;
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
