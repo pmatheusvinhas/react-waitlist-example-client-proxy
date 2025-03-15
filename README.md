@@ -194,6 +194,15 @@ This example demonstrates a secure approach to handling API requests that requir
 4. **CORS Protection**: The server is configured to only accept requests from allowed origins
 5. **Environment File Separation**: Using `.env.*.local` for secrets and `.env.*.production` as templates prevents accidental exposure of sensitive information
 
+## Related Documentation
+
+For more information about React Waitlist, check out these resources:
+
+- [Main Documentation](../../docs/README.md)
+- [API Reference](../../docs/api.md)
+- [Security Guide](../../docs/security.md)
+- [Performance Guide](../../docs/performance.md)
+
 ## License
 
 MIT
