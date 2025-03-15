@@ -1,31 +1,18 @@
+// Load environment variables first
+import './config/env.js';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
-
-// Import our proxy handlers
-import { recaptchaProxyHandler } from './api/recaptcha-proxy.js';
-import { resendProxyHandler } from './api/resend-proxy.js';
-import { webhookProxyHandler } from './api/webhook-proxy.js';
 
 // Get the directory name
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables with priority:
-// 1. .env.server.local (for development with real secrets, ignored by git)
-// 2. .env.server.production (template with placeholders, versioned in git)
-const envLocalPath = path.join(__dirname, '.env.server.local');
-const envProductionPath = path.join(__dirname, '.env.server.production');
-
-// Check if .env.server.local exists, otherwise fall back to .env.server.production
-const envPath = fs.existsSync(envLocalPath) ? envLocalPath : envProductionPath;
-dotenv.config({ path: envPath });
-
-// Log which environment file was loaded (but don't show any secrets)
-console.log(`Loaded environment variables from: ${path.basename(envPath)}`);
+// Import our proxy handlers
+import { recaptchaProxyHandler } from './api/recaptcha-proxy.js';
+import { resendProxyHandler } from './api/resend-proxy.js';
+import { webhookProxyHandler } from './api/webhook-proxy.js';
 
 const app = express();
 app.use(express.json());
@@ -49,8 +36,20 @@ app.use(cors({
   credentials: true
 }));
 
-// Create Resend proxy endpoint
-app.post('/api/resend-proxy', resendProxyHandler);
+// Create Resend proxy endpoint with debug info
+app.post('/api/resend-proxy', (req, res, next) => {
+  console.log('Resend API Key at request time:', !!process.env.RESEND_API_KEY);
+  console.log('Resend Audience ID at request time:', process.env.RESEND_AUDIENCE_ID);
+  console.log('Request body:', req.body);
+  console.log('Request headers:', req.headers);
+  
+  try {
+    return resendProxyHandler(req, res, next);
+  } catch (error) {
+    console.error('Error in Resend proxy handler:', error);
+    return res.status(500).json({ error: error.message });
+  }
+});
 
 // Create webhook proxy endpoint
 app.post('/api/webhook-proxy', webhookProxyHandler);

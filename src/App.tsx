@@ -79,6 +79,14 @@ function App() {
   const [events, setEvents] = useState<WaitlistEventData[]>([])
   const [apiCalls, setApiCalls] = useState<{timestamp: string, type: string, data: any}[]>([])
 
+  // Debug environment variables
+  console.log('Frontend Environment Variables:', {
+    resendAudienceId: import.meta.env.VITE_RESEND_AUDIENCE_ID,
+    resendProxyEndpoint: import.meta.env.VITE_RESEND_PROXY_ENDPOINT,
+    recaptchaSiteKey: import.meta.env.VITE_RECAPTCHA_SITE_KEY,
+    recaptchaProxyEndpoint: import.meta.env.VITE_RECAPTCHA_PROXY_ENDPOINT
+  });
+
   // Add event to the log
   const logEvent = (event: WaitlistEventData) => {
     console.log('Event logged:', event); // Debug log
@@ -146,7 +154,7 @@ function App() {
       <main className="main-content">
         <div className="form-container">
           <WaitlistForm 
-            title="Join Our Waitlist"
+            title="Join our waitlist"
             description="Be the first to know when we launch our new product."
             submitText="Join Now"
             
@@ -313,23 +321,6 @@ function App() {
           </div>
         </div>
       </main>
-
-      {/* Info Banner */}
-      <div className="cors-warning-banner">
-        <h3>ℹ️ About this example</h3>
-        <p>
-          <strong>Proxy Implementation:</strong> This example demonstrates using proxy endpoints to securely handle 
-          API requests that require secret keys. The proxy endpoints are implemented in the server directory.
-        </p>
-        <p>
-          <strong>reCAPTCHA Verification:</strong> The reCAPTCHA verification is handled by a proxy endpoint that 
-          securely stores your secret key on the server side.
-        </p>
-        <p>
-          <strong>Resend Integration:</strong> Similarly, the Resend API integration is handled by a proxy endpoint 
-          to avoid exposing your API key in client-side code.
-        </p>
-      </div>
 
       <footer>
         <p>This is an example of using React Waitlist with a proxy endpoint.</p>

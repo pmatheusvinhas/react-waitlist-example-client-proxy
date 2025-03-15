@@ -16,7 +16,7 @@ const handler = createResendProxy({
   debug: true // Enable debug mode for detailed logs
 });
 
-// Wrap the handler with additional logging
+// Wrap the handler with additional logging and transparent response handling
 export const resendProxyHandler = async (req, res) => {
   console.log('Resend proxy request received:', {
     method: req.method,
@@ -27,17 +27,38 @@ export const resendProxyHandler = async (req, res) => {
     }
   });
 
+  // Create a response interceptor to capture and forward all responses
+  const originalJson = res.json;
+  const originalStatus = res.status;
+  const originalSend = res.send;
+  
+  // Override response methods to log before sending
+  res.json = function(body) {
+    console.log('Resend proxy response:', body);
+    return originalJson.call(this, body);
+  };
+  
+  res.status = function(code) {
+    console.log('Resend proxy status code:', code);
+    return originalStatus.call(this, code);
+  };
+  
+  res.send = function(body) {
+    console.log('Resend proxy sending response:', body);
+    return originalSend.call(this, body);
+  };
+
   try {
     // Execute the handler
     await handler(req, res);
   } catch (error) {
     console.error('Unhandled error in Resend proxy:', error);
     
-    // If response hasn't been sent yet, send a 500 error
+    // If response hasn't been sent yet, send a error with appropriate status code
     if (!res.headersSent) {
-      return res.status(500).json({ 
-        error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
+      return res.status(error.statusCode || 500).json({ 
+        error: error.name || 'Internal server error',
+        message: error.message || 'Unknown error'
       });
     }
   }
